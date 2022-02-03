@@ -1,0 +1,156 @@
+version: "3.1"
+
+services:
+  nginx:
+    depends_on:
+      - fastapi
+      - client
+
+    env_file:
+      - .env
+    #restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - "3050:80"
+
+    #wait for the dependencies to be ready
+    #command: ["sleep", "5"]
+
+  client:
+    stdin_open: true
+    env_file:
+      - .env
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+
+  mongo:
+    image: mongo:latest
+    #restart: always
+    volumes:
+      - ./mongo:/data
+    env_file:
+      - .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    ports:
+      - "27017:27017"
+
+  postgres:
+    image: postgres:latest
+    volumes:
+      - ./postgres:/data
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${PGUSER}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - PGDATA=/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    env_file:
+      - .env
+    image: "redis:latest"
+
+  fastapi:
+    #stdin_open: true
+    build:
+      dockerfile: Dockerfile
+      context: ./fastapi
+    volumes:
+      #- /usr/local/lib
+      - ./fastapi:/app
+    env_file:
+      - .env
+    environment:
+      #= sets the variable at run time (when container is started up)
+      #just the variable name, value is taken from computer
+      #- POSTGRES_PASSWORD
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - PGUSER=${PGUSER}
+      - PGHOST=${PGHOST}
+      - PGDATABASE=${PGDATABASE}
+      - PGPASSWORD=${PGPASSWORD}
+      - PGPORT=${PGPORT}
+      - MONGO_HOST=${MONGO_HOST}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_PORT=${MONGO_PORT}
+
+  worker:
+    stdin_open: true
+    build:
+      dockerfile: Dockerfile
+      context: ./worker
+    volumes:
+      #- /usr/local/lib
+      - ./worker:/app
+    env_file:
+      - .env
+    environment:
+      #= sets the variable at run time (when container is started up)
+      #just the variable name, value is taken from computer
+      #- POSTGRES_PASSWORD
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - PGUSER=${PGUSER}
+      - PGHOST=${PGHOST}
+      - PGDATABASE=${PGDATABASE}
+      - PGPASSWORD=${PGPASSWORD}
+      - PGPORT=${PGPORT}
+      - MONGO_HOST=${MONGO_HOST}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_PORT=${MONGO_PORT}
+
+  rtw_app:
+    #stdin_open: true
+    build:
+      dockerfile: Dockerfile
+      context: ./rtw_app
+    volumes:
+      #- /usr/local/lib
+      - ./rtw_app:/app
+    env_file:
+      - .env
+    environment:
+      #= sets the variable at run time (when container is started up)
+      #just the variable name, value is taken from computer
+      #- POSTGRES_PASSWORD
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - PGUSER=${PGUSER}
+      - PGHOST=${PGHOST}
+      - PGDATABASE=${PGDATABASE}
+      - PGPASSWORD=${PGPASSWORD}
+      - PGPORT=${PGPORT}
+      - MONGO_HOST=${MONGO_HOST}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_PORT=${MONGO_PORT}
+    ports:
+      - "5001:5001"
+
+  rtw_client:
+    stdin_open: true
+    env_file:
+      - .env
+    build:
+      dockerfile: Dockerfile
+      context: ./rtw_client
+    volumes:
+      - /app/node_modules
+      - ./rtw_client:/app
+    environment:
+      - NODE_OPTIONS=--openssl-legacy-provider
+    ports:
+      - "3000:3000"

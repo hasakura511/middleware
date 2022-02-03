@@ -1,0 +1,10 @@
+ipython
+requests
+pymongo
+motor
+pandas
+sqlalchemy
+psycopg2
+autopep8
+ipykernel
+redis

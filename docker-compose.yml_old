@@ -1,0 +1,47 @@
+version: "3.1"
+
+services:
+  mongo:
+    image: mongo:latest
+    restart: always
+    volumes:
+      - ./mongo:/data
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: N37sp33d
+
+  postgres:
+    image: postgres:latest
+    volumes:
+      - ./postgres:/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: N37sp33d
+      PGDATA: /data
+
+  redis:
+    image: "redis:latest"
+
+  ipython:
+    stdin_open: true
+    build:
+      dockerfile: Dockerfile
+      context: ./ipython
+    volumes:
+      - /usr/local/lib
+      - ./ipython:/app
+    environment:
+      #= sets the variable at run time (when container is started up)
+      #just the variable name, value is taken from computer
+      #- POSTGRES_PASSWORD
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGDATABASE=postgres
+      - PGPASSWORD=N37sp33d
+      - PGPORT=5432
+      - MONGO_HOST=mongo
+      - MONGO_USER=mongo
+      - MONGO_PASSWORD=N37sp33d
+      - MONGO_PORT=27017

@@ -1,0 +1,20 @@
+# exclude everything
+node_modules
+mongo/*
+postgres/*
+rtw_app/images/*
+# exception to the rule
+!mongo/.gitkeep
+!postgres/.gitkeep 
+# .env
+log.txt
+.devcontainer
+.vscode
+.mypy_cache
+cookiecutter-config-file.yml
+node_modules
+*.swp
+*.swo
+*.pyc
+*.tar.gz
+.DS_Store

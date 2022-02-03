@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+sqlalchemy
+pymongo
+python-dotenv
+motor
+alembic
+psycopg2
+passlib
+bcrypt
+python-multipart
+aiofiles
+python-jose

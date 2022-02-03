@@ -1,0 +1,27 @@
+.tplProduct {
+  border: 1px solid rgb(52, 242, 125);
+  margin: 5px;
+  width: 200px;
+}
+
+.tplTitle {
+  border-bottom: 1px dotted blue;
+  padding: 5px;
+}
+
+.tplDescription {
+  border-bottom: 1px dotted blue;
+  padding: 5px;
+}
+
+body {
+  font-family: sans-serif;
+  color: #333;
+  line-height: 1.5;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: linear-gradient(to top left, #28b487, #7dd56f);
+}
